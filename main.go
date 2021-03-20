@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
+	"html/template"
 	"io/ioutil"
 	_ "io/ioutil"
 	"os"
@@ -22,12 +22,16 @@ const (
 
 
 type project struct{
-	title string
-	technologies []string
-	summary string
-	learningOutcomes string
-	projectOutcomes string
-	images []string
+	Title string
+	Technologies []string
+	Summary string
+	LearningOutcomes string
+	ProjectOutcomes string
+	Images []string
+}
+
+type projectDetailsPage struct{
+	Project project
 }
 
 func main() {
@@ -38,7 +42,20 @@ func main() {
 	}
 
 	var projects []project = loadProjects(projectDirs)
-	fmt.Print(projects)
+	t, err := template.ParseFiles("templates/basetemplate.html")
+
+	if err != nil {
+		panic("Cannot parse template" )
+	}
+
+	error := t.Execute(os.Stdout, projectDetailsPage{
+		Project: projects[0],
+	})
+
+	if error != nil {
+		panic("Cannot execute template"+ error.Error())
+	}
+	_ = projects
 }
 
 func loadProjects(projectDirs []os.FileInfo) []project{
@@ -56,10 +73,10 @@ func loadProjects(projectDirs []os.FileInfo) []project{
 
 func loadProject(f os.FileInfo) project {
 	return project{
-		title:        strings.Replace(f.Name(), "_", " ", -1),
-		technologies: loadProjectTechFile(f),
-		summary:      loadProjectSummaryFile(f),
-		images:       loadProjectImagePaths(f),
+		Title:        strings.Replace(f.Name(), "_", " ", -1),
+		Technologies: loadProjectTechFile(f),
+		Summary:      loadProjectSummaryFile(f),
+		Images:       loadProjectImagePaths(f),
 	}
 }
 

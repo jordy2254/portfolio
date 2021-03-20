@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>This is a title</title>
 </head>
 <body>
+    <h1>{{.Project.Title}}</h1>
+    <p>{{.Project.Summary}}</p>
+
+    <h2>Learning Outcomes</h2>
+    {{.Project.ProjectOutcomes}}
+
+    <h2>Project Outcomes</h2>
+    {{.Project.ProjectOutcomes}}
+
+    <h2>Project Images</h2>
+    {{range $v := .Project.Images}}
+        <img src="{{$v}}"/>
+    {{end}}
 
 </body>
 </html>
