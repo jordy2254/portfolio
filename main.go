@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io/ioutil"
 	_ "io/ioutil"
@@ -12,6 +13,8 @@ const (
 	PROJECT_FOLDER = "projects"
 	TECHFILENAME    = "technologies.csv"
 	SUMMARYFILENAME = "summary.txt"
+	LEARNINGOUTCOMES = "learningoutcomes.txt"
+	PROJECTOUTCOMES = "projectoutcomes.txt"
 	IMAGEFOLDERNAME = "images"
 
 	OUTPUTDIR = "build"
@@ -22,6 +25,8 @@ type project struct{
 	title string
 	technologies []string
 	summary string
+	learningOutcomes string
+	projectOutcomes string
 	images []string
 }
 
@@ -33,7 +38,6 @@ func main() {
 	}
 
 	var projects []project = loadProjects(projectDirs)
-
 	fmt.Print(projects)
 }
 
@@ -76,10 +80,37 @@ func loadProjectImagePaths(f os.FileInfo) []string {
 }
 
 func loadProjectSummaryFile(f os.FileInfo) string {
-	return ""
+	path := PROJECT_FOLDER + "/" + f.Name() + "/" + SUMMARYFILENAME
+	file, err := os.Open(path)
+	if err != nil {
+		return ""
+	}
+	val, err := ioutil.ReadAll(file)
+	if err != nil {
+		return ""
+	}
+	return string(val)
 }
 
 func loadProjectTechFile(f os.FileInfo) []string {
-	return []string{}
+	path := PROJECT_FOLDER + "/" + f.Name() + "/" + TECHFILENAME
+	file, err := os.Open(path)
+
+	if err != nil {
+		return []string{}
+	}
+
+	reader := csv.NewReader(file)
+	result, err := reader.ReadAll()
+	if err != nil {
+		return []string{}
+	}
+
+	var flat []string
+	for _, v := range result {
+		flat = append(flat, v...)
+	}
+
+	return flat
 }
 
