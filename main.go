@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"html/template"
+	"io"
 	"io/ioutil"
 	_ "io/ioutil"
 	"os"
@@ -22,40 +23,94 @@ const (
 
 
 type project struct{
+	FolderPath string
+	FolderPathLowerCase string
 	Title string
 	Technologies []string
 	Summary string
 	LearningOutcomes string
 	ProjectOutcomes string
 	Images []string
+	HighlightedProject bool
 }
 
 type projectDetailsPage struct{
 	Project project
 }
 
+type indexPage struct{
+	FeaturedProjects []project
+}
+
 func main() {
 	projectDirs, err := ioutil.ReadDir(PROJECT_FOLDER)
-
+	//https://www.calhoun.io/intro-to-templates-p2-actions/
 	if err != nil {
 		panic("Cannot load files")
 	}
 
 	var projects []project = loadProjects(projectDirs)
-	t, err := template.ParseFiles("templates/basetemplate.html")
+	t, err := template.ParseFiles("templates/ProjectViewTemplate.gohtml", "templates/index.gohtml", "templates/nav.gohtml")
 
-	if err != nil {
-		panic("Cannot parse template" )
+	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err){
+		error := os.RemoveAll(OUTPUTDIR + "/*")
+		if error != nil {
+			panic(error)
+		}
 	}
 
-	error := t.Execute(os.Stdout, projectDetailsPage{
-		Project: projects[0],
+	os.Mkdir(OUTPUTDIR, os.ModePerm)
+	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER, os.ModePerm)
+	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER + "/images", os.ModePerm)
+
+	//Generate the html pages for the projects
+	for _, v := range projects {
+		fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + v.FolderPathLowerCase + ".html")
+
+		IMAGEPATH := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + v.FolderPathLowerCase
+
+		os.Mkdir(IMAGEPATH, os.ModePerm)
+		//copy image resources
+		for _, image := range(v.Images){
+			reader, err := os.Open(PROJECT_FOLDER + "/" + v.FolderPath + "/images/" + image)
+			if err != nil {
+				panic(err)
+			}
+			writer, err := os.Create(IMAGEPATH + "/" + image)
+			if err != nil {
+				panic(err)
+			}
+			io.Copy(writer, reader)
+		}
+		defer fileOuput.Close()
+
+		if err != nil {
+			panic(err)
+		}
+		error := t.ExecuteTemplate(fileOuput, "ProjectViewTemplate.gohtml", projectDetailsPage{
+			Project: v,
+		})
+		if error != nil {
+			panic(error)
+		}
+	}
+
+	fileOuput, err := os.Create(OUTPUTDIR + "/index.html")
+
+	var featuredProjects []project
+	for _, v := range projects{
+		if(!v.HighlightedProject){
+			continue
+		}
+		featuredProjects = append(featuredProjects, v)
+	}
+
+	error := t.ExecuteTemplate(fileOuput, "index.gohtml", indexPage{
+		FeaturedProjects: featuredProjects,
 	})
-
 	if error != nil {
-		panic("Cannot execute template"+ error.Error())
+		panic(error)
 	}
-	_ = projects
 }
 
 func loadProjects(projectDirs []os.FileInfo) []project{
@@ -73,11 +128,21 @@ func loadProjects(projectDirs []os.FileInfo) []project{
 
 func loadProject(f os.FileInfo) project {
 	return project{
-		Title:        strings.Replace(f.Name(), "_", " ", -1),
-		Technologies: loadProjectTechFile(f),
-		Summary:      loadProjectSummaryFile(f),
-		Images:       loadProjectImagePaths(f),
+		FolderPath:          f.Name(),
+		FolderPathLowerCase: strings.ToLower(f.Name()),
+		Title:               strings.Replace(f.Name(), "_", " ", -1),
+		Technologies:        loadProjectTechFile(f),
+		Summary:             loadProjectSummaryFile(f),
+		LearningOutcomes:    "",
+		ProjectOutcomes:     "",
+		Images:              loadProjectImagePaths(f),
+		HighlightedProject:  isHighlightedProject(f),
 	}
+}
+
+func isHighlightedProject(f os.FileInfo) bool {
+	_, err := os.Stat(PROJECT_FOLDER + "/" + f.Name() + "/highlighted.txt")
+	return !os.IsNotExist(err)
 }
 
 func loadProjectImagePaths(f os.FileInfo) []string {

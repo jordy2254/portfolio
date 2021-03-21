@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{template "nav.gohtml"}}
+    <h1>Featured Projects</h1>
+    {{range $v := .FeaturedProjects}}
+        <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+        <img src="images/{{$v.FolderPathLowerCase}}/{{$v}}"/>
+    {{end}}
+</body>
+</html>
