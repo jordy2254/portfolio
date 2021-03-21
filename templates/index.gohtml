@@ -1,8 +1,159 @@
 {{define "content"}}
-    <h1>Featured Projects</h1>
-    {{range $v := .Projects}}
-        {{if $x := $v.HighlightedProject}}
-            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+    <div id="intro">
+        <h1>Introduction & where it began</h1>
+        <div>
+            <p>Hello, Im Jordan. Im a backend software developer and this is my portfolio. I have a high passion for
+                coding which started when I was just 13 years old.
+                It was at this age I started chasing my ambitions to be a software developer<span
+                        id="expandIntroductionEllipse">...</span> <a id="expandIntroductionLink"
+                                                                     href="javascript:expandIntroduction()">Read
+                    more</a>
+
+                <span style="display:none;" class="introductionExtended"> starting with Android development where I made a few programs
+                and published one to the Google Play Store, I even made some money through purchases on a paid version.
+                After this my passion moved to the desktop where I went on to learn java swing and making Swing applications.
+                Throughout college and university I have gained an extensive knowledge of programming with languages like Java, SQL, C/C++,
+                Agile development practices and more. My passion for code to this day remains high, and I am always learning new skills and methods.</span>
+            </p>
+            <p>The rest of this portfolio will focus some projects aswell as the technologies and languages i know.
+                If you have any question please don't
+                hesitate to contact me.</p>
+
+        </div>
+    </div>
+    <div class="whatIDo">
+        <h1>What I Do</h1>
+        <div class="languages">
+            <div class="language">
+                <div class="languageContainer">
+                    <div>
+                        <i class="fab fa-java fa-2x"></i>
+                    </div>
+                    <div>
+                        <h2>Java</h2>
+                        <div>
+                            Java is the language i have the most expierence in. Below is a list of
+                            frameworks/technologies i know
+                            <ul>
+                                <li>Swing</li>
+                                <li>Spring</li>
+                                <li>Hibernate</li>
+                                <li>JSF</li>
+                                <li>JSP</li>
+                                <li>Design</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="language">
+                <div class="languageContainer">
+                    <div>
+                        <i class="fab fa-js-square fa-2x"></i>
+                    </div>
+                    <div>
+                        <h2>Java script</h2>
+                        <div>
+                            <p>Javascript is something i know how to use but sadly I don't know many frameworks
+                                other than JQuery.
+                                This is something I am currently working on, (SEE Below)
+                            </p>
+                            <ul>
+                                <li>JQuery</li>
+                                <li>Vinila Javascript</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="language">
+                <div class="languageContainer">
+                    <div>
+                        <i class="fab fa-html5 fa-2x"></i>
+                        <i class="fab fa-css3-alt fa-2x"></i>
+                        <i class="fab fa-php fa-2x"></i>
+                    </div>
+                    <div>
+                        <h2>HTML/CSS</h2>
+                        <div>HTML and CSS are the core of todays webdevelopment for making UIs look pretty.
+                            Although
+                            my design skills lack if given a design I can create a functional website that
+                            mimicks
+                            that design.
+
+                            ne of my first expierences within industry was during college when I done 2 weeks at
+                            a
+                            local web development company. Before this I had a functioning knowledge of HTML &
+                            CSS.
+                            Whilst on this placement I went on to learn PHP, connecting to a database, and
+                            dynamic
+                            pages. The end project was a small application to show customer's projects in an
+                            easy
+                            way as an internal tool.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="language">
+                <div class="languageContainer">
+                    <div>
+                        <i class="fab fa-php fa-2x"></i>
+                    </div>
+                    <div>
+                        <h2>C/C++</h2>
+                        <div>These languages i have a functioning knowledge in, and is something i can work
+                            with.
+                            some of my projects have been developed with this however I have no substantial
+                            projects
+                            or industry expierence in this.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="language">
+                <div class="languageContainer">
+                    <div>
+                        <i class="fab fa-html5 fa-2x"></i>
+                        <i class="fab fa-css3-alt fa-2x"></i>
+                        <i class="fab fa-php fa-2x"></i>
+                    </div>
+                    <div>
+                        <h2>GoLang</h2>
+                        <div>GoLang is a language i discovered in the first quarter of 2020. With it's ease of
+                            use and quick ability to right
+                            functional code it has now become my goto too for making quick applications for taks
+                            i want to create. Some of these
+                            tasks can be seen in my portfolio page. It's also taking a large part of my final
+                            year project where it's been used
+                            to create a rest API and interact with auth0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="learning">
+        <h1>What I'm learning to do</h1>
+        <div>REACT? other frameworks. For a software developer to stay relevent it's important to keep up with
+            the
+            current technologies. As such I'm always learning new skills and reading about the latest and
+            greatest.
+            Below is a list of technologies i'm currently working to improve my skills on. All of these
+            technologies
+            I have a fundemental knowledge of currently so could be employed to do such as task
+        </div>
+        <div></div>
+    </div>
+    <div class="featuredProjects">
+        <h1>Featured Projects</h1>
+        <div>Below are a list of featured projects, navigating to them will lead you to a 'blog' like post
+            detailing
+            key information and steps along with technologies and skills the project demonstrates.
+        </div>
+        {{range $v := .Projects}}
+            {{if $x := $v.HighlightedProject}}
+                <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+            {{end}}
         {{end}}
-    {{end}}
+    </div>
 {{end}}

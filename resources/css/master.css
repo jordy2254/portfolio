@@ -1,0 +1,196 @@
+:root{
+  /*https://coolors.co/2d6a9c*/
+  --main-bg-color:#98C0E1;
+  --nav-bg-color:#204B6E;
+  --nav-accent-dark:#03070B;
+  --content-bg-color:#DDEAF5;
+}
+html{
+  margin:0;
+  width:100%;
+  height:100%;
+}
+
+body{
+  margin:0;
+  width: 100%;
+  height:100%;
+  background-color: var(--main-bg-color);
+  overflow:hidden;
+  min-width: 300px;
+}
+
+#profileContainer{
+  margin-top:10px;
+  width:100%;
+  text-align: center;
+}
+
+#profile{
+  width:50%;
+  max-width:125px;
+  border-radius: 100%;
+}
+
+#mainContent {
+  grid-column-start: 2;
+  grid-column-end: span 1;
+  grid-row-start: 1;
+  grid-row-end: span 1;
+  overflow-y: scroll;
+  background-color: var(--content-bg-color);
+}
+
+#mainContent > div{
+  padding:20px;
+}
+
+#content{
+  margin:50px;
+  height: calc(100vh - 100px);
+  width: calc(100vw - 100px);
+  display: grid;
+  grid-template-columns: 20% auto;
+  grid-template-rows: 100%;
+}
+
+/*Front page languages*/
+.whatIDo{
+  border-top: 2px solid gray;
+  flex: 0 0 100%;
+}
+
+.languages {
+  display:flex;
+  flex: 0 0 100%;
+  flex-wrap:wrap;
+}
+
+.language {
+  display:flex;
+
+ flex: 0 0 25%;
+  height:100%;
+  vertical-align:top;
+}
+
+.languageContainer{
+  margin:10px;
+}
+
+.fa-java{
+  color:red;
+}
+
+.fa-html5{
+  color:red;
+}
+
+.fa-css3-alt{
+  color:blue;
+}
+
+.fa-php{
+  color:purple;
+}
+
+.fa-js-square{
+  color:yellow;
+}
+
+/*Front page featuredProjects*/
+.featuredProjects{
+  border-top: 1px solid gray;
+  display:flex;
+  flex-wrap: wrap;
+}
+
+.featuredProject img{
+  width: 100%;
+}
+
+.featuredProject{
+  margin:0;
+  flex: 0 0 50%;
+  display:flex;
+}
+.featuredProject .featuredProjectContainer{
+  width:100%;
+  margin:5px;
+  display:flex;
+}
+.featuredProject .featuredProjectContainer .projectDetailsContainer{
+  flex: 0 0 66%;
+  vertical-align:top;
+  padding-left:10px;
+}
+.featuredProject .featuredProjectContainer .projectDetailsContainer h2{
+  margin-top:0px;
+}
+.featuredProject .featuredProjectContainer .projectIconContainer{
+
+ flex: 0 0 33%;
+
+}
+.featuredProject .featuredProjectContainer .projectIcon{
+  max-width:100%;
+}
+
+#navLinksDiv{
+  padding-top:10px;
+  border-top: 2px solid var(--nav-accent-dark);
+}
+
+
+/*Navigation*/
+nav {
+  grid-column-start: 1;
+  grid-column-end: span 1;
+  grid-row-start: 1;
+  grid-row-end: span 1;
+  background-color: var(--nav-bg-color);
+  position: relative;
+}
+
+nav ul{
+  padding:0;
+  margin:0;
+  text-align: center;
+}
+
+nav .navFooter{
+  position: absolute;
+  bottom: 0;
+  font-size: 10px;
+  color:white;
+  padding: 5px;
+}
+nav ul li{
+  text-align:center;
+  display:block;
+  font-size: 25px;
+  height:40px;
+  text-align: right;
+  padding-right:0px;
+}
+
+nav ul li a{
+  color: white;
+  display:block;
+  text-align: center;
+}
+
+nav #name, nav #jobTitle{
+    text-align: center;
+    display:block;
+    width:100%;
+    color:white;
+    font-weight: bold;
+}
+nav #name{
+  font-size: 25px;
+}
+
+nav #jobTitle{
+    font-size: 15px;
+}

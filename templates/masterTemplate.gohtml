@@ -4,10 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Jhellier | Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{$.Context}}resources/css/master.css">
+    <link rel="stylesheet" href="{{$.Context}}resources/css/tablet.css">
+    <link rel="stylesheet" href="{{$.Context}}resources/css/mobile.css">
+    <link rel="" href="{{$.Context}}resources/css/mobile.css">
+    <script type="text/javascript" src="{{$.Context}}resources/js/menu.js"></script>
+    <script type="text/javascript" src="{{$.Context}}resources/js/jquery.js"></script>
+    <script src="https://kit.fontawesome.com/16f4d6aab5.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script type="text/javascript">
+
+        function expandIntroduction() {
+            $('.introductionExtended').show();
+            $('#expandIntroductionLink').hide();
+            $('#expandIntroductionEllipse').hide();
+        }
+
+    </script>
 </head>
 <body>
-    {{template "nav" .}}
-    {{template "content" .}}
+    <div id="content">
+        {{template "nav" .}}
+        <div id="mainContent">
+            {{template "content" .}}
+        </div>
+
+    </div>
+
 </body>
 </html>
 {{end}}

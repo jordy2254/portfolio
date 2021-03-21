@@ -59,6 +59,8 @@ func main() {
 	singlePages := make(map[string]string)
 	singlePages["index.gohtml"] = "index.html"
 	singlePages["projects.gohtml"] = "projects.html"
+	singlePages["contact.gohtml"] = "contact.html"
+	singlePages["resume.gohtml"] = "resume.html"
 
 	var projects = loadProjects(projectDirs)
 
