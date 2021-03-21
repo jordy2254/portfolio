@@ -11,39 +11,39 @@ import (
 )
 
 const (
-	PROJECT_FOLDER = "projects"
-	TECHFILENAME    = "technologies.csv"
-	SUMMARYFILENAME = "summary.txt"
+	PROJECT_FOLDER       = "projects"
+	TECHFILENAME         = "technologies.csv"
+	SUMMARYFILENAME      = "summary.txt"
 	SHORTSUMMARYFILENAME = "shortsummary.txt"
-	LEARNINGOUTCOMES = "learningoutcomes.txt"
-	PROJECTOUTCOMES = "projectoutcomes.txt"
-	IMAGEFOLDERNAME = "images"
-	OUTPUTDIR = "build"
-	RESOURCES = "resources"
-	STATICPAGES = "staticpages"
+	LEARNINGOUTCOMES     = "learningoutcomes.txt"
+	PROJECTOUTCOMES      = "projectoutcomes.txt"
+	IMAGEFOLDERNAME      = "images"
+	OUTPUTDIR            = "build"
+	RESOURCES            = "resources"
+	STATICPAGES          = "staticpages"
 )
 
-type project struct{
-	FolderPath string
+type project struct {
+	FolderPath          string
 	FolderPathLowerCase string
-	Title string
-	Technologies []string
-	Summary string
-	LearningOutcomes string
-	ProjectOutcomes string
-	Images []string
-	HighlightedProject bool
+	Title               string
+	Technologies        []string
+	Summary             string
+	LearningOutcomes    string
+	ProjectOutcomes     string
+	Images              []string
+	HighlightedProject  bool
 }
 
-type projectDetailsPage struct{
+type projectDetailsPage struct {
 	Project project
 }
 
-type indexPage struct{
+type indexPage struct {
 	FeaturedProjects []project
 }
 
-type projectsPage struct{
+type projectsPage struct {
 	Projects []project
 }
 
@@ -53,7 +53,6 @@ func main() {
 	singlePages := make(map[string]string)
 	singlePages["index.gohtml"] = "index.html"
 	singlePages["projects.gohtml"] = "projects.html"
-
 
 	if err != nil {
 		panic("Cannot load files")
@@ -65,7 +64,7 @@ func main() {
 		"templates/projects.gohtml",
 		"templates/nav.gohtml")
 
-	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err){
+	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err) {
 		error := os.RemoveAll(OUTPUTDIR)
 		if error != nil {
 			panic(error)
@@ -73,11 +72,11 @@ func main() {
 	}
 
 	os.Mkdir(OUTPUTDIR, os.ModePerm)
-	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER, os.ModePerm)
-	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER + "/images", os.ModePerm)
-	os.Mkdir(OUTPUTDIR + "/" + RESOURCES, os.ModePerm)
+	os.Mkdir(OUTPUTDIR+"/"+PROJECT_FOLDER, os.ModePerm)
+	os.Mkdir(OUTPUTDIR+"/"+PROJECT_FOLDER+"/images", os.ModePerm)
+	os.Mkdir(OUTPUTDIR+"/"+RESOURCES, os.ModePerm)
 
-	copyDirectoryRecursive(RESOURCES, OUTPUTDIR + "/" + RESOURCES)
+	copyDirectoryRecursive(RESOURCES, OUTPUTDIR+"/"+RESOURCES)
 	copyDirectoryRecursive(STATICPAGES, OUTPUTDIR)
 
 	generateProjectPages(projects, t)
@@ -85,7 +84,7 @@ func main() {
 }
 
 func generateSinglePages(pages map[string]string, projects []project, t *template.Template) {
-	for k, v := range pages{
+	for k, v := range pages {
 		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
 		error := t.ExecuteTemplate(fileOuput, k, projectsPage{
 			Projects: projects,
@@ -94,8 +93,6 @@ func generateSinglePages(pages map[string]string, projects []project, t *templat
 			panic(error)
 		}
 	}
-
-
 }
 
 func generateProjectPages(projects []project, t *template.Template) {
@@ -123,27 +120,27 @@ func generateProjectPages(projects []project, t *template.Template) {
 	}
 }
 
-func copyDirectoryRecursive(src, dst string){
+func copyDirectoryRecursive(src, dst string) {
 	files, err := ioutil.ReadDir(src)
 	if err != nil {
 		panic(err)
 	}
-	if _, err := os.Stat(dst); os.IsNotExist(err){
+	if _, err := os.Stat(dst); os.IsNotExist(err) {
 		os.Mkdir(dst, os.ModePerm)
 	}
 	if err != nil {
 		panic(err)
 	}
-	for _, v := range files{
-		if(v.IsDir()){
-			copyDirectoryRecursive(src + "/" + v.Name(), dst + "/" + v.Name())
+	for _, v := range files {
+		if v.IsDir() {
+			copyDirectoryRecursive(src+"/"+v.Name(), dst+"/"+v.Name())
 			continue
 		}
- 		copyFile(src + "/" + v.Name(), dst + "/" + v.Name())
+		copyFile(src+"/"+v.Name(), dst+"/"+v.Name())
 	}
 }
 
-func copyFile(src, dst string){
+func copyFile(src, dst string) {
 	reader, err := os.Open(src)
 	if err != nil {
 		panic(err)
@@ -155,7 +152,7 @@ func copyFile(src, dst string){
 	io.Copy(writer, reader)
 }
 
-func loadProjects(projectDirs []os.FileInfo) []project{
+func loadProjects(projectDirs []os.FileInfo) []project {
 	var projects []project
 
 	for _, f := range projectDirs {
@@ -216,7 +213,7 @@ func loadProjectSummaryFile(f os.FileInfo) string {
 	return loadTextFile(path)
 }
 
-func loadTextFile(src string) string{
+func loadTextFile(src string) string {
 	file, err := os.Open(src)
 	if err != nil {
 		return ""
