@@ -1,7 +1,7 @@
 {{define "nav"}}
 <nav>
     <div id="profileContainer">
-        <img src="resources/img/placeholder-profile-sq.jpg" id="profile"/>
+        <img src="{{$.Context}}resources/img/placeholder-profile-sq.jpg" id="profile"/>
     </div>
     <div>
         <div id="menuToggle" style="display:none;"><a href="javascript:toggleMenu()">T</a></div>
@@ -10,11 +10,11 @@
     </div>
     <div id="navLinksDiv">
         <ul id="navLinks">
-            <li><a href="#">Home</a></li>
-            <li><a href="projects.html">Projects</a></li>
+            <li><a href="{{$.Context}}index.html">Home</a></li>
+            <li><a href="{{$.Context}}projects.html">Projects</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Resume</a></li>
-            <li><a href="#">Github</a></li>
+            <li><a href="https://github.com/jordy2254">Github</a></li>
         </ul>
     </div>
     <div class="navFooter">

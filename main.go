@@ -21,6 +21,8 @@ const (
 	OUTPUTDIR            = "build"
 	RESOURCES            = "resources"
 	STATICPAGES          = "staticpages"
+
+	CONTEXT = "/portfolio/build/"
 )
 
 type project struct {
@@ -37,10 +39,12 @@ type project struct {
 
 type projectDetailsPage struct {
 	Project project
+	Context string
 }
 
 type pageData struct {
 	Projects []project
+	Context string
 }
 
 func createTemplateForPage(page string) (*template.Template, error){
@@ -86,6 +90,7 @@ func generateSinglePages(pages map[string]string, projects []project) {
 		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
 		error := templ.ExecuteTemplate(fileOuput, "base", pageData{
 			Projects: projects,
+			Context: CONTEXT,
 		})
 		if error != nil {
 			panic(error)
@@ -113,8 +118,9 @@ func generateProjectPages(projects []project) {
 		if err != nil {
 			panic(err)
 		}
-		error := templ.ExecuteTemplate(fileOuput, "ProjectViewTemplate.gohtml", projectDetailsPage{
+		error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
 			Project: v,
+			Context: CONTEXT,
 		})
 		if error != nil {
 			panic(error)

@@ -2,7 +2,7 @@
     <h1>Featured Projects</h1>
     {{range $v := .Projects}}
         {{if $x := $v.HighlightedProject}}
-            <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
         {{end}}
     {{end}}
 {{end}}

@@ -1,6 +1,6 @@
 {{define "content"}}
     {{template "nav.gohtml"}}
     {{range $v := .Projects}}
-            <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
     {{end}}
 {{end}}

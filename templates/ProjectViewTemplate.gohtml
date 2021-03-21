@@ -10,6 +10,6 @@
 
         <h2>Project Images</h2>
         {{range $v := .Project.Images}}
-        <img src="images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
+        <img src="{{$.Context}}projects/images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
         {{end}}
 {{end}}
