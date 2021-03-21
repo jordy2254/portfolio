@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{{define "content"}}
     {{template "nav.gohtml"}}
     {{range $v := .Projects}}
             <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
     {{end}}
-</body>
-</html>
+{{end}}

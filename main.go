@@ -39,30 +39,24 @@ type projectDetailsPage struct {
 	Project project
 }
 
-type indexPage struct {
-	FeaturedProjects []project
-}
-
-type projectsPage struct {
+type pageData struct {
 	Projects []project
 }
 
+func createTemplateForPage(page string) (*template.Template, error){
+	return template.ParseFiles(page, "templates/masterTemplate.gohtml", "templates/nav.gohtml")
+}
 func main() {
 	projectDirs, err := ioutil.ReadDir(PROJECT_FOLDER)
 
+	if err != nil {
+		panic(err)
+	}
 	singlePages := make(map[string]string)
 	singlePages["index.gohtml"] = "index.html"
 	singlePages["projects.gohtml"] = "projects.html"
 
-	if err != nil {
-		panic("Cannot load files")
-	}
-
 	var projects = loadProjects(projectDirs)
-	t, err := template.ParseFiles("templates/ProjectViewTemplate.gohtml",
-		"templates/index.gohtml",
-		"templates/projects.gohtml",
-		"templates/nav.gohtml")
 
 	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err) {
 		error := os.RemoveAll(OUTPUTDIR)
@@ -79,14 +73,18 @@ func main() {
 	copyDirectoryRecursive(RESOURCES, OUTPUTDIR+"/"+RESOURCES)
 	copyDirectoryRecursive(STATICPAGES, OUTPUTDIR)
 
-	generateProjectPages(projects, t)
-	generateSinglePages(singlePages, projects, t)
+	generateProjectPages(projects)
+	generateSinglePages(singlePages, projects)
 }
 
-func generateSinglePages(pages map[string]string, projects []project, t *template.Template) {
+func generateSinglePages(pages map[string]string, projects []project) {
 	for k, v := range pages {
+		templ, err := createTemplateForPage("templates/" + k)
+		if(err != nil){
+			panic(err)
+		}
 		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
-		error := t.ExecuteTemplate(fileOuput, k, projectsPage{
+		error := templ.ExecuteTemplate(fileOuput, "base", pageData{
 			Projects: projects,
 		})
 		if error != nil {
@@ -95,7 +93,11 @@ func generateSinglePages(pages map[string]string, projects []project, t *templat
 	}
 }
 
-func generateProjectPages(projects []project, t *template.Template) {
+func generateProjectPages(projects []project) {
+	templ, err := createTemplateForPage("templates/ProjectViewTemplate.gohtml")
+	if(err != nil){
+		panic(err)
+	}
 	for _, v := range projects {
 		fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + v.FolderPathLowerCase + ".html")
 
@@ -111,7 +113,7 @@ func generateProjectPages(projects []project, t *template.Template) {
 		if err != nil {
 			panic(err)
 		}
-		error := t.ExecuteTemplate(fileOuput, "ProjectViewTemplate.gohtml", projectDetailsPage{
+		error := templ.ExecuteTemplate(fileOuput, "ProjectViewTemplate.gohtml", projectDetailsPage{
 			Project: v,
 		})
 		if error != nil {

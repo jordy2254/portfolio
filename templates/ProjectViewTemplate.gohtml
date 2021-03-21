@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>This is a title</title>
-</head>
-<body>
-    {{template "nav.gohtml"}}
-    <div class="content">
+{{define "content"}}
         <h1>{{.Project.Title}}</h1>
         <p>{{.Project.Summary}}</p>
 
@@ -20,6 +12,4 @@
         {{range $v := .Project.Images}}
         <img src="images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
         {{end}}
-    </div>
-</body>
-</html>
+{{end}}

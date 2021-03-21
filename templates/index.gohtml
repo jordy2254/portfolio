@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{template "nav.gohtml"}}
+{{define "content"}}
     <h1>Featured Projects</h1>
     {{range $v := .Projects}}
         {{if $x := $v.HighlightedProject}}
             <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
         {{end}}
     {{end}}
-</body>
-</html>
+{{end}}
