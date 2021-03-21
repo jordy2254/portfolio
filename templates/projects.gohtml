@@ -5,12 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-{{template "nav.gohtml"}}
-    <h1>Featured Projects</h1>
+    {{template "nav.gohtml"}}
     {{range $v := .Projects}}
-        {{if $x := $v.HighlightedProject}}
             <a href="projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
-        {{end}}
     {{end}}
 </body>
 </html>

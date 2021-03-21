@@ -14,13 +14,14 @@ const (
 	PROJECT_FOLDER = "projects"
 	TECHFILENAME    = "technologies.csv"
 	SUMMARYFILENAME = "summary.txt"
+	SHORTSUMMARYFILENAME = "shortsummary.txt"
 	LEARNINGOUTCOMES = "learningoutcomes.txt"
 	PROJECTOUTCOMES = "projectoutcomes.txt"
 	IMAGEFOLDERNAME = "images"
-
 	OUTPUTDIR = "build"
+	RESOURCES = "resources"
+	STATICPAGES = "staticpages"
 )
-
 
 type project struct{
 	FolderPath string
@@ -42,18 +43,30 @@ type indexPage struct{
 	FeaturedProjects []project
 }
 
+type projectsPage struct{
+	Projects []project
+}
+
 func main() {
 	projectDirs, err := ioutil.ReadDir(PROJECT_FOLDER)
-	//https://www.calhoun.io/intro-to-templates-p2-actions/
+
+	singlePages := make(map[string]string)
+	singlePages["index.gohtml"] = "index.html"
+	singlePages["projects.gohtml"] = "projects.html"
+
+
 	if err != nil {
 		panic("Cannot load files")
 	}
 
-	var projects []project = loadProjects(projectDirs)
-	t, err := template.ParseFiles("templates/ProjectViewTemplate.gohtml", "templates/index.gohtml", "templates/nav.gohtml")
+	var projects = loadProjects(projectDirs)
+	t, err := template.ParseFiles("templates/ProjectViewTemplate.gohtml",
+		"templates/index.gohtml",
+		"templates/projects.gohtml",
+		"templates/nav.gohtml")
 
 	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err){
-		error := os.RemoveAll(OUTPUTDIR + "/*")
+		error := os.RemoveAll(OUTPUTDIR)
 		if error != nil {
 			panic(error)
 		}
@@ -62,25 +75,39 @@ func main() {
 	os.Mkdir(OUTPUTDIR, os.ModePerm)
 	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER, os.ModePerm)
 	os.Mkdir(OUTPUTDIR + "/" + PROJECT_FOLDER + "/images", os.ModePerm)
+	os.Mkdir(OUTPUTDIR + "/" + RESOURCES, os.ModePerm)
 
-	//Generate the html pages for the projects
+	copyDirectoryRecursive(RESOURCES, OUTPUTDIR + "/" + RESOURCES)
+	copyDirectoryRecursive(STATICPAGES, OUTPUTDIR)
+
+	generateProjectPages(projects, t)
+	generateSinglePages(singlePages, projects, t)
+}
+
+func generateSinglePages(pages map[string]string, projects []project, t *template.Template) {
+	for k, v := range pages{
+		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
+		error := t.ExecuteTemplate(fileOuput, k, projectsPage{
+			Projects: projects,
+		})
+		if error != nil {
+			panic(error)
+		}
+	}
+
+
+}
+
+func generateProjectPages(projects []project, t *template.Template) {
 	for _, v := range projects {
 		fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + v.FolderPathLowerCase + ".html")
 
-		IMAGEPATH := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + v.FolderPathLowerCase
+		imagePath := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + v.FolderPathLowerCase
 
-		os.Mkdir(IMAGEPATH, os.ModePerm)
+		os.Mkdir(imagePath, os.ModePerm)
 		//copy image resources
-		for _, image := range(v.Images){
-			reader, err := os.Open(PROJECT_FOLDER + "/" + v.FolderPath + "/images/" + image)
-			if err != nil {
-				panic(err)
-			}
-			writer, err := os.Create(IMAGEPATH + "/" + image)
-			if err != nil {
-				panic(err)
-			}
-			io.Copy(writer, reader)
+		for _, image := range v.Images {
+			copyFile(PROJECT_FOLDER+"/"+v.FolderPath+"/images/"+image, imagePath+"/"+image)
 		}
 		defer fileOuput.Close()
 
@@ -94,23 +121,38 @@ func main() {
 			panic(error)
 		}
 	}
+}
 
-	fileOuput, err := os.Create(OUTPUTDIR + "/index.html")
-
-	var featuredProjects []project
-	for _, v := range projects{
-		if(!v.HighlightedProject){
+func copyDirectoryRecursive(src, dst string){
+	files, err := ioutil.ReadDir(src)
+	if err != nil {
+		panic(err)
+	}
+	if _, err := os.Stat(dst); os.IsNotExist(err){
+		os.Mkdir(dst, os.ModePerm)
+	}
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range files{
+		if(v.IsDir()){
+			copyDirectoryRecursive(src + "/" + v.Name(), dst + "/" + v.Name())
 			continue
 		}
-		featuredProjects = append(featuredProjects, v)
+ 		copyFile(src + "/" + v.Name(), dst + "/" + v.Name())
 	}
+}
 
-	error := t.ExecuteTemplate(fileOuput, "index.gohtml", indexPage{
-		FeaturedProjects: featuredProjects,
-	})
-	if error != nil {
-		panic(error)
+func copyFile(src, dst string){
+	reader, err := os.Open(src)
+	if err != nil {
+		panic(err)
 	}
+	writer, err := os.Create(dst)
+	if err != nil {
+		panic(err)
+	}
+	io.Copy(writer, reader)
 }
 
 func loadProjects(projectDirs []os.FileInfo) []project{
@@ -133,8 +175,8 @@ func loadProject(f os.FileInfo) project {
 		Title:               strings.Replace(f.Name(), "_", " ", -1),
 		Technologies:        loadProjectTechFile(f),
 		Summary:             loadProjectSummaryFile(f),
-		LearningOutcomes:    "",
-		ProjectOutcomes:     "",
+		LearningOutcomes:    loadLearningOutcomesFile(f),
+		ProjectOutcomes:     loadProjectOutcomesFile(f),
 		Images:              loadProjectImagePaths(f),
 		HighlightedProject:  isHighlightedProject(f),
 	}
@@ -160,10 +202,22 @@ func loadProjectImagePaths(f os.FileInfo) []string {
 	}
 	return imagePaths
 }
+func loadProjectOutcomesFile(f os.FileInfo) string {
+	path := PROJECT_FOLDER + "/" + f.Name() + "/" + PROJECTOUTCOMES
+	return loadTextFile(path)
+}
+func loadLearningOutcomesFile(f os.FileInfo) string {
+	path := PROJECT_FOLDER + "/" + f.Name() + "/" + LEARNINGOUTCOMES
+	return loadTextFile(path)
+}
 
 func loadProjectSummaryFile(f os.FileInfo) string {
 	path := PROJECT_FOLDER + "/" + f.Name() + "/" + SUMMARYFILENAME
-	file, err := os.Open(path)
+	return loadTextFile(path)
+}
+
+func loadTextFile(src string) string{
+	file, err := os.Open(src)
 	if err != nil {
 		return ""
 	}
@@ -195,4 +249,3 @@ func loadProjectTechFile(f os.FileInfo) []string {
 
 	return flat
 }
-
