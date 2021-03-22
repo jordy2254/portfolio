@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/csv"
+	"flag"
+	"github.com/op/go-logging"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -21,8 +23,14 @@ const (
 	OUTPUTDIR            = "build"
 	RESOURCES            = "resources"
 	STATICPAGES          = "staticpages"
+)
 
-	CONTEXT = "/portfolio/build/"
+var(
+	context = "/"
+	logger  = logging.MustGetLogger("example")
+	format = logging.MustStringFormatter(
+		`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{color:reset} %{message}`,
+	)
 )
 
 type project struct {
@@ -51,10 +59,26 @@ func createTemplateForPage(page string) (*template.Template, error){
 	return template.ParseFiles(page, "templates/masterTemplate.gohtml", "templates/nav.gohtml")
 }
 func main() {
+	logging.SetBackend(logging.NewBackendFormatter(logging.NewLogBackend(os.Stdout, "", 0),format))
+
+	bs := flag.Bool("build-site", false, "Builds the entire site given the params")
+	flag.StringVar(&context, "context", context, "Sets the context for the website route when building")
+	flag.Parse()
+
+	if *bs {
+		logger.Info("Building Site...")
+		buildSite()
+		logger.Info("Site built successfully")
+	}
+}
+
+func buildSite(){
+
 	projectDirs, err := ioutil.ReadDir(PROJECT_FOLDER)
 
 	if err != nil {
-		panic(err)
+		logger.Error("Failed to load project Folder build failed")
+		os.Exit(1)
 	}
 	singlePages := make(map[string]string)
 	singlePages["index.gohtml"] = "index.html"
@@ -66,7 +90,8 @@ func main() {
 	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err) {
 		error := os.RemoveAll(OUTPUTDIR)
 		if error != nil {
-			panic(error)
+			logger.Error("Failed to delete prior build, build failed")
+			os.Exit(1)
 		}
 	}
 
@@ -86,15 +111,15 @@ func generateSinglePages(pages map[string]string, projects []project) {
 	for k, v := range pages {
 		templ, err := createTemplateForPage("templates/" + k)
 		if(err != nil){
-			panic(err)
+			logger.Warningf("Failed to parse template %s, page will not be generated", k)
 		}
 		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
 		error := templ.ExecuteTemplate(fileOuput, "base", pageData{
 			Projects: projects,
-			Context: CONTEXT,
+			Context:  context,
 		})
 		if error != nil {
-			panic(error)
+			logger.Warningf("Failed to execute template %s, page will not be generated", k)
 		}
 	}
 }
@@ -102,10 +127,14 @@ func generateSinglePages(pages map[string]string, projects []project) {
 func generateProjectPages(projects []project) {
 	templ, err := createTemplateForPage("templates/ProjectViewTemplate.gohtml")
 	if(err != nil){
-		panic(err)
+		logger.Warning("Failed to parse template for projects, project pages will not be generated")
 	}
 	for _, v := range projects {
 		fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + v.FolderPathLowerCase + ".html")
+		if err != nil {
+			logger.Warningf("Failed to create output file for project %s", v.FolderPath)
+			continue
+		}
 
 		imagePath := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + v.FolderPathLowerCase
 
@@ -116,30 +145,29 @@ func generateProjectPages(projects []project) {
 		}
 		defer fileOuput.Close()
 
-		if err != nil {
-			panic(err)
-		}
+
 		error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
 			Project: v,
-			Context: CONTEXT,
+			Context: context,
 		})
 		if error != nil {
-			panic(error)
+			logger.Warningf("Failed to execute project template for for project %s", v.FolderPath)
+			continue
 		}
+		logger.Debugf("Generated project html for %s", v.FolderPath)
 	}
 }
 
 func copyDirectoryRecursive(src, dst string) {
 	files, err := ioutil.ReadDir(src)
 	if err != nil {
-		panic(err)
+		logger.Warningf("Failed to read directory for source %s", src)
+		return
 	}
 	if _, err := os.Stat(dst); os.IsNotExist(err) {
 		os.Mkdir(dst, os.ModePerm)
 	}
-	if err != nil {
-		panic(err)
-	}
+
 	for _, v := range files {
 		if v.IsDir() {
 			copyDirectoryRecursive(src+"/"+v.Name(), dst+"/"+v.Name())
@@ -152,13 +180,16 @@ func copyDirectoryRecursive(src, dst string) {
 func copyFile(src, dst string) {
 	reader, err := os.Open(src)
 	if err != nil {
-		panic(err)
+		logger.Warningf("Failed to open file from %s", dst)
+		return
 	}
 	writer, err := os.Create(dst)
 	if err != nil {
-		panic(err)
+		logger.Warningf("Failed to write file to %s", dst)
+		return
 	}
 	io.Copy(writer, reader)
+	logger.Debugf("Copied file from %s to %s", src, dst)
 }
 
 func loadProjects(projectDirs []os.FileInfo) []project {
