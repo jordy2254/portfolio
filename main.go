@@ -30,9 +30,9 @@ type project struct {
 	FolderPathLowerCase string
 	Title               string
 	Technologies        []string
-	Summary             string
-	LearningOutcomes    string
-	ProjectOutcomes     string
+	Summary             template.HTML
+	LearningOutcomes    template.HTML
+	ProjectOutcomes     template.HTML
 	Images              []string
 	HighlightedProject  bool
 }
@@ -208,18 +208,18 @@ func loadProjectImagePaths(f os.FileInfo) []string {
 	}
 	return imagePaths
 }
-func loadProjectOutcomesFile(f os.FileInfo) string {
+func loadProjectOutcomesFile(f os.FileInfo) template.HTML {
 	path := PROJECT_FOLDER + "/" + f.Name() + "/" + PROJECTOUTCOMES
-	return loadTextFile(path)
+	return template.HTML(loadTextFile(path))
 }
-func loadLearningOutcomesFile(f os.FileInfo) string {
+func loadLearningOutcomesFile(f os.FileInfo) template.HTML {
 	path := PROJECT_FOLDER + "/" + f.Name() + "/" + LEARNINGOUTCOMES
-	return loadTextFile(path)
+	return template.HTML(loadTextFile(path))
 }
 
-func loadProjectSummaryFile(f os.FileInfo) string {
+func loadProjectSummaryFile(f os.FileInfo) template.HTML {
 	path := PROJECT_FOLDER + "/" + f.Name() + "/" + SUMMARYFILENAME
-	return loadTextFile(path)
+	return template.HTML(loadTextFile(path))
 }
 
 func loadTextFile(src string) string {
