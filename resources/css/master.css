@@ -76,6 +76,9 @@ body{
 
 .languageContainer{
   margin:10px;
+  padding:10px;
+  box-sizing: content-box;
+  border: 1px solid black;
 }
 
 .fa-java{

@@ -2,7 +2,7 @@
     <div id="intro">
         <h1>Introduction & where it began</h1>
         <div>
-            <p>Hello, Im Jordan. Im a backend software developer and this is my portfolio. I have a high passion for
+            <p>Hello, I'm Jordan. Im a backend software developer and this is my portfolio. I have a high passion for
                 coding which started when I was just 13 years old.
                 It was at this age I started chasing my ambitions to be a software developer<span
                         id="expandIntroductionEllipse">...</span> <a id="expandIntroductionLink"
@@ -15,9 +15,8 @@
                 Throughout college and university I have gained an extensive knowledge of programming with languages like Java, SQL, C/C++,
                 Agile development practices and more. My passion for code to this day remains high, and I am always learning new skills and methods.</span>
             </p>
-            <p>The rest of this portfolio will focus some projects aswell as the technologies and languages i know.
-                If you have any question please don't
-                hesitate to contact me.</p>
+            <p>The rest of this portfolio will focus some projects aswell as the technologies and languages I know.
+                If you have any question please don't hesitate to contact me. <a href="#featuredProjects">Skip to highlighted projects</a></p>
 
         </div>
     </div>
@@ -32,15 +31,15 @@
                     <div>
                         <h2>Java</h2>
                         <div>
-                            Java is the language i have the most expierence in. Below is a list of
-                            frameworks/technologies i know
+                            Java is the language I have the most expierence in. Below is a list of some
+                            frameworks/technologies I know
                             <ul>
                                 <li>Swing</li>
                                 <li>Spring</li>
                                 <li>Hibernate</li>
                                 <li>JSF</li>
                                 <li>JSP</li>
-                                <li>Design</li>
+                                <li>Android Development</li>
                             </ul>
                         </div>
                     </div>
@@ -54,7 +53,7 @@
                     <div>
                         <h2>Java script</h2>
                         <div>
-                            <p>Javascript is something i know how to use but sadly I don't know many frameworks
+                            <p>Javascript is something I know how to use but sadly I don't know many frameworks
                                 other than JQuery.
                                 This is something I am currently working on, (SEE Below)
                             </p>
@@ -101,7 +100,7 @@
                     </div>
                     <div>
                         <h2>C/C++</h2>
-                        <div>These languages i have a functioning knowledge in, and is something i can work
+                        <div>These languages I have a functioning knowledge in, and is something I can work
                             with.
                             some of my projects have been developed with this however I have no substantial
                             projects
@@ -119,10 +118,10 @@
                     </div>
                     <div>
                         <h2>GoLang</h2>
-                        <div>GoLang is a language i discovered in the first quarter of 2020. With it's ease of
+                        <div>GoLang is a language I discovered in the first quarter of 2020. With it's ease of
                             use and quick ability to right
                             functional code it has now become my goto too for making quick applications for taks
-                            i want to create. Some of these
+                            I want to create. Some of these
                             tasks can be seen in my portfolio page. It's also taking a large part of my final
                             year project where it's been used
                             to create a rest API and interact with auth0
@@ -134,21 +133,41 @@
     </div>
     <div class="learning">
         <h1>What I'm learning to do</h1>
-        <div>REACT? other frameworks. For a software developer to stay relevent it's important to keep up with
-            the
-            current technologies. As such I'm always learning new skills and reading about the latest and
-            greatest.
-            Below is a list of technologies i'm currently working to improve my skills on. All of these
-            technologies
-            I have a fundemental knowledge of currently so could be employed to do such as task
+        <div>
+            I feel it's important to always be learning and expanding my skill set as such I am always creating something,
+            alot of the time this something is made as a throw away project to test an idea or learn a new skill.
+            In addition to this I'm also always reading articles and blogs about new coding languages/frameworks and more
+            I feel this is incredibly important to stay relevent in an ever expanding industry.<br/>
+            My current focuss is the learning of front end frameworks, although I'm not a UI designer I currently have
+            the skills to implement a UI from a design and feel a full-stack developer is a better overall developer than
+            someone unable to do full stack. Below is a list of some of the frameworks/languages I'm still working on
+            mastering to add to my toolbox, at their current stage I could code/use them but would not be effcient in doing so,
+            but doing is the best way and would be open to jobs using these technologies
+
+            <div class="languages">
+                <div class="language">
+                    <div class="languageContainer">
+                        <div>
+                            <i class="fab fa-java fa-2x"></i>
+                        </div>
+                        <div>
+                            <h2>React</h2>
+                            <div>
+                                I've used react for one project so far but there's still alot for me to learn, I'm slowly working through
+                                various aspects of this library, such as react-query, redux and more in order to greatly improve my understanding
+                                and make application code better
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div></div>
     </div>
-    <div class="featuredProjects">
+    <div id="featuredProjects" class="featuredProjects">
         <h1>Featured Projects</h1>
-        <div>Below are a list of featured projects, navigating to them will lead you to a 'blog' like post
-            detailing
-            key information and steps along with technologies and skills the project demonstrates.
+        <div>I have many projects in my portfolio which can be found here, Below is some of these project I feel stand out in some way,
+            listing the technologies used and a quick summary, if one peaks your interesting clicking it will provide more information
         </div>
         {{range $v := .Projects}}
             {{if $x := $v.HighlightedProject}}
