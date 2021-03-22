@@ -80,10 +80,6 @@ func buildSite(){
 		logger.Error("Failed to load project Folder build failed")
 		os.Exit(1)
 	}
-	singlePages := make(map[string]string)
-	singlePages["index.gohtml"] = "index.html"
-	singlePages["projects.gohtml"] = "projects.html"
-	singlePages["contact.gohtml"] = "contact.html"
 
 	var projects = loadProjects(projectDirs)
 
@@ -100,27 +96,43 @@ func buildSite(){
 	os.Mkdir(OUTPUTDIR+"/"+PROJECT_FOLDER+"/images", os.ModePerm)
 	os.Mkdir(OUTPUTDIR+"/"+RESOURCES, os.ModePerm)
 
+	logger.Debug("Copying resources")
 	copyDirectoryRecursive(RESOURCES, OUTPUTDIR+"/"+RESOURCES)
+	logger.Debug("Copying static pages")
 	copyDirectoryRecursive(STATICPAGES, OUTPUTDIR)
 
 	generateProjectPages(projects)
-	generateSinglePages(singlePages, projects)
+	generateSinglePages(projects)
 }
 
-func generateSinglePages(pages map[string]string, projects []project) {
-	for k, v := range pages {
-		templ, err := createTemplateForPage("templates/" + k)
-		if(err != nil){
-			logger.Warningf("Failed to parse template %s, page will not be generated", k)
+func generateSinglePages(projects []project) {
+	singlePages, err := ioutil.ReadDir("templates/singlePages")
+	if(err != nil){
+		logger.Warning("Single pages directory not found")
+		return
+	}
+
+	for _, v := range singlePages {
+		if v.IsDir() || !strings.HasSuffix(v.Name(), "gohtml") {
+			continue
 		}
-		fileOuput, _ := os.Create(OUTPUTDIR + "/" + v)
+
+		templateName := v.Name()
+		outputName := strings.Replace(v.Name(), "gohtml", "html", -1)
+
+		templ, err := createTemplateForPage("templates/singlePages/" + templateName)
+		if(err != nil){
+			logger.Warningf("Failed to parse template %s, page will not be generated", templateName)
+		}
+		fileOuput, _ := os.Create(OUTPUTDIR + "/" + outputName)
 		error := templ.ExecuteTemplate(fileOuput, "base", pageData{
 			Projects: projects,
 			Context:  context,
 		})
 		if error != nil {
-			logger.Warningf("Failed to execute template %s, page will not be generated", k)
+			logger.Warningf("Failed to execute template %s, page will not be generated", templateName)
 		}
+		fileOuput.Close()
 	}
 }
 
@@ -143,7 +155,6 @@ func generateProjectPages(projects []project) {
 		for _, image := range v.Images {
 			copyFile(PROJECT_FOLDER+"/"+v.FolderPath+"/images/"+image, imagePath+"/"+image)
 		}
-		defer fileOuput.Close()
 
 
 		error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
@@ -155,6 +166,7 @@ func generateProjectPages(projects []project) {
 			continue
 		}
 		logger.Debugf("Generated project html for %s", v.FolderPath)
+		fileOuput.Close()
 	}
 }
 
@@ -227,6 +239,7 @@ func isHighlightedProject(f os.FileInfo) bool {
 func loadProjectImagePaths(f os.FileInfo) []string {
 	imageFiles, err := ioutil.ReadDir(PROJECT_FOLDER + "/" + f.Name() + "/" + IMAGEFOLDERNAME)
 	if err != nil {
+		logger.Warningf("Image directory for project %s is missing", f.Name())
 		return []string{}
 	}
 	var imagePaths []string
@@ -256,10 +269,12 @@ func loadProjectSummaryFile(f os.FileInfo) template.HTML {
 func loadTextFile(src string) string {
 	file, err := os.Open(src)
 	if err != nil {
+		logger.Warningf("Failed to open text file %s", src)
 		return ""
 	}
 	val, err := ioutil.ReadAll(file)
 	if err != nil {
+		logger.Warningf("Failed to read text file %s", src)
 		return ""
 	}
 	return string(val)
@@ -270,12 +285,14 @@ func loadProjectTechFile(f os.FileInfo) []string {
 	file, err := os.Open(path)
 
 	if err != nil {
+		logger.Warningf("Failed to open csv file %s", path)
 		return []string{}
 	}
 
 	reader := csv.NewReader(file)
 	result, err := reader.ReadAll()
 	if err != nil {
+		logger.Warningf("Failed to parse csv file %s", path)
 		return []string{}
 	}
 
