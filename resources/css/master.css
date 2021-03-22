@@ -46,9 +46,12 @@ body{
 }
 
 #content{
-  margin:50px;
+  /*margin:50px;
   height: calc(100vh - 100px);
   width: calc(100vw - 100px);
+  */
+   height:100vh;
+  width:100vw;
   display: grid;
   grid-template-columns: 20% auto;
   grid-template-rows: 100%;
