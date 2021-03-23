@@ -142,32 +142,36 @@ func generateProjectPages(projects []project) {
 		logger.Warning("Failed to parse template for projects, project pages will not be generated")
 	}
 	for _, v := range projects {
-		fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + v.FolderPathLowerCase + ".html")
-		if err != nil {
-			logger.Warningf("Failed to create output file for project %s", v.FolderPath)
-			continue
-		}
-
-		imagePath := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + v.FolderPathLowerCase
-
-		os.Mkdir(imagePath, os.ModePerm)
-		//copy image resources
-		for _, image := range v.Images {
-			copyFile(PROJECT_FOLDER+"/"+v.FolderPath+"/images/"+image, imagePath+"/"+image)
-		}
-
-
-		error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
-			Project: v,
-			Context: context,
-		})
-		if error != nil {
-			logger.Warningf("Failed to execute project template for for project %s", v.FolderPath)
-			continue
-		}
-		logger.Debugf("Generated project html for %s", v.FolderPath)
-		fileOuput.Close()
+		generateProject(v, templ)
 	}
+}
+
+func generateProject(project project, templ *template.Template){
+	fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + project.FolderPathLowerCase + ".html")
+	if err != nil {
+		logger.Warningf("Failed to create output file for project %s", project.FolderPath)
+
+	}
+
+	imagePath := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + project.FolderPathLowerCase
+
+	os.Mkdir(imagePath, os.ModePerm)
+	//copy image resources
+	for _, image := range project.Images {
+		copyFile(PROJECT_FOLDER+"/"+project.FolderPath+"/images/"+image, imagePath+"/"+image)
+	}
+
+
+	error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
+		Project: project,
+		Context: context,
+	})
+	if error != nil {
+		logger.Warningf("Failed to execute project template for for project %s", project.FolderPath)
+
+	}
+	logger.Debugf("Generated project html for %s", project.FolderPath)
+	fileOuput.Close()
 }
 
 func copyDirectoryRecursive(src, dst string) {
@@ -205,6 +209,7 @@ func copyFile(src, dst string) {
 }
 
 func loadProjects(projectDirs []os.FileInfo) []project {
+	logger.Info("Loading projects")
 	var projects []project
 
 	for _, f := range projectDirs {
@@ -214,6 +219,7 @@ func loadProjects(projectDirs []os.FileInfo) []project {
 
 		projects = append(projects, loadProject(f))
 	}
+	logger.Info("Successfully loaded projects")
 	return projects
 }
 
