@@ -60,19 +60,67 @@ body{
 /*Front page languages*/
 .whatIDo{
   border-top: 2px solid gray;
-  flex: 0 0 100%;
+  flex: 0 0 50%;
+}
+
+.projectPreviewsContainer, .projectPreviewContainer{
+  display:flex;
+  flex: 0 0 25%;
+  flex-wrap: wrap;
+  min-width: 25%;
+}
+
+.projectPreviewsContainer, .projectPreviewContainer *{
+  color:black;
+  text-decoration: none;
+}
+
+.projectPreviewContainer{
+  box-sizing: border-box;
+  padding:10px;
+}
+
+.projectPreviewContainer .projectPreviewContainerWrapper .previewImage{
+  max-width: 100%;
+}
+
+.projectPreviewContainer .projectPreviewContainerWrapper .shortSummary{
+  max-height: 100%;
+  height:100%;
+  width:100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position:absolute;
+  top:0;
+  bottom:0;
+  background-color: rgba(0,0,0,0.3);
+  padding:20px;
+  box-sizing: border-box;
+  display:none;
+}
+
+.projectPreviewContainerWrapper{
+  display:block;
+  width:100%;
+  height:100%;
+  border: 1px black solid;
+  position:relative;
+}
+
+.projectPreviewContainerWrapper:hover > .shortSummary{
+  display:block;
 }
 
 .languages {
   display:flex;
-  flex: 0 0 100%;
+  flex: 0 0 50%;
   flex-wrap:wrap;
 }
 
 .language {
   display:flex;
 
- flex: 0 0 25%;
+ flex: 0 0 50%;
   height:100%;
   vertical-align:top;
 }

@@ -1,15 +1,17 @@
 {{define "content"}}
-        <h1>{{.Project.Title}}</h1>
-        <p>{{.Project.Summary}}</p>
+        <div>
+                <h1>{{.Project.Title}}</h1>
+                <p>{{.Project.Summary}}</p>
 
-        <h2>Learning Outcomes</h2>
-        {{.Project.LearningOutcomes}}
+                <h2>Learning Outcomes</h2>
+                {{.Project.LearningOutcomes}}
 
-        <h2>Project Outcomes</h2>
-        {{.Project.ProjectOutcomes}}
+                <h2>Project Outcomes</h2>
+                {{.Project.ProjectOutcomes}}
 
-        <h2>Project Images</h2>
-        {{range $v := .Project.Images}}
-        <img src="{{$.Context}}projects/images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
-        {{end}}
+                <h2>Project Images</h2>
+                {{range $v := .Project.Images}}
+                        <img src="{{$.Context}}projects/images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
+                {{end}}
+        </div>
 {{end}}

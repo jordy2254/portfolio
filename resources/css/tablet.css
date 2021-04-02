@@ -19,4 +19,11 @@
     height:100%;
     vertical-align:top;
   }
+
+  .projectPreviewsContainer, .projectPreviewContainer{
+    display:flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    min-width: 100%;
+  }
 }

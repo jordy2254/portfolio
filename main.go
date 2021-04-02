@@ -16,7 +16,6 @@ const (
 	PROJECT_FOLDER       = "projects"
 	TECHFILENAME         = "technologies.csv"
 	SUMMARYFILENAME      = "summary.txt"
-	SHORTSUMMARYFILENAME = "shortsummary.txt"
 	LEARNINGOUTCOMES     = "learningoutcomes.txt"
 	PROJECTOUTCOMES      = "projectoutcomes.txt"
 	IMAGEFOLDERNAME      = "images"
@@ -39,10 +38,12 @@ type project struct {
 	Title               string
 	Technologies        []string
 	Summary             template.HTML
+	ShortSummary             template.HTML
 	LearningOutcomes    template.HTML
 	ProjectOutcomes     template.HTML
 	Images              []string
 	HighlightedProject  bool
+	PlaceholderImage string
 }
 
 type projectDetailsPage struct {
@@ -224,7 +225,7 @@ func loadProjects(projectDirs []os.FileInfo) []project {
 }
 
 func loadProject(f os.FileInfo) project {
-	return project{
+	project := project{
 		FolderPath:          f.Name(),
 		FolderPathLowerCase: strings.ToLower(f.Name()),
 		Title:               strings.Replace(f.Name(), "_", " ", -1),
@@ -235,6 +236,8 @@ func loadProject(f os.FileInfo) project {
 		Images:              loadProjectImagePaths(f),
 		HighlightedProject:  isHighlightedProject(f),
 	}
+	project.PlaceholderImage = context + "resources/img/placeholder-profile-sq.jpg"
+	return project
 }
 
 func isHighlightedProject(f os.FileInfo) bool {
@@ -271,6 +274,7 @@ func loadProjectSummaryFile(f os.FileInfo) template.HTML {
 	path := PROJECT_FOLDER + "/" + f.Name() + "/" + SUMMARYFILENAME
 	return template.HTML(loadTextFile(path))
 }
+
 
 func loadTextFile(src string) string {
 	file, err := os.Open(src)

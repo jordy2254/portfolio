@@ -26,9 +26,6 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
-                        <i class="fab fa-java fa-2x"></i>
-                    </div>
-                    <div>
                         <h2>Java</h2>
                         <div>
                             Java is the language I have the most expierence in. Below is a list of some
@@ -48,11 +45,6 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
-                        <i class="fab fa-html5 fa-2x"></i>
-                        <i class="fab fa-css3-alt fa-2x"></i>
-                        <i class="fab fa-php fa-2x"></i>
-                    </div>
-                    <div>
                         <h2>GoLang</h2>
                         <div>GoLang is a language I discovered in the first quarter of 2020. With it's ease of
                             use and quick ability to write functional code it has now become my goto too for making
@@ -64,9 +56,6 @@
             </div>
             <div class="language">
                 <div class="languageContainer">
-                    <div>
-                        <i class="fab fa-js-square fa-2x"></i>
-                    </div>
                     <div>
                         <h2>Java script/Type script</h2>
                         <div>
@@ -83,36 +72,15 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
-                        <i class="fab fa-html5 fa-2x"></i>
-                        <i class="fab fa-css3-alt fa-2x"></i>
-                        <i class="fab fa-php fa-2x"></i>
-                    </div>
-                    <div>
                         <h2>HTML/CSS</h2>
-                        <div>HTML and CSS are the core of todays webdevelopment for making UIs look pretty.
-                            Although
-                            my design skills lack if given a design I can create a functional website that
-                            mimicks
-                            that design.
-
-                            ne of my first expierences within industry was during college when I done 2 weeks at
-                            a
-                            local web development company. Before this I had a functioning knowledge of HTML &
-                            CSS.
-                            Whilst on this placement I went on to learn PHP, connecting to a database, and
-                            dynamic
-                            pages. The end project was a small application to show customer's projects in an
-                            easy
-                            way as an internal tool.
+                        <div>HTML and CSS are the core of todays web development. My design skills lack but given a
+                            design I can implement the design and have a functioning website.
                         </div>
                     </div>
                 </div>
             </div>
             <div class="language">
                 <div class="languageContainer">
-                    <div>
-                        <i class="fab fa-php fa-2x"></i>
-                    </div>
                     <div>
                         <h2>C/C++</h2>
                         <div>These languages I have a functioning knowledge in, and is something I can work
@@ -143,9 +111,6 @@
                 <div class="language">
                     <div class="languageContainer">
                         <div>
-                            <i class="fab fa-java fa-2x"></i>
-                        </div>
-                        <div>
                             <h2>React</h2>
                             <div>
                                 I've used react for one project so far but there's still alot for me to learn, I'm slowly working through
@@ -164,10 +129,32 @@
         <div>I have many projects in my portfolio which can be found on the left hand side, Below is some of these project I feel stand out in some way,
             listing the technologies used and a quick summary, if one peaks your interesting clicking it will provide more information
         </div>
+        {{$highlight := false}}
         {{range $v := .Projects}}
             {{if $x := $v.HighlightedProject}}
-                <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
+                {{$highlight = true}}
+
+                    <div class="projectPreviewContainer">
+                        <div class="projectPreviewContainerWrapper">
+                            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">
+                                <div class="projectTitle">{{$v.FolderPath}}</div>
+                                <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
+
+                            </a>
+                            <span>
+                            {{range $i, $t := $v.Technologies}}
+                                {{if ne $i 0}}
+                                    ,
+                                {{end}}
+                                {{$t}}
+                            {{end}}
+                        </span>
+                        </div>
+                    </div>
             {{end}}
+        {{end}}
+        {{if not $highlight}}
+            <p>There doesn't appear to be any highlighted projects yet</p>
         {{end}}
     </div>
 {{end}}

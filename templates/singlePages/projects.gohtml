@@ -1,6 +1,36 @@
 {{define "content"}}
-    {{template "nav.gohtml"}}
-    {{range $v := .Projects}}
-            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">{{$v.FolderPath}}</a>
-    {{end}}
+    <div><h1>My Projects</h1>
+        The below list contains the various projects on my portfolio. including a preview image, the technologies/langu
+        ages used, it's title and a short summary. On desktop this summary will show on mouse over, on mobile it will be
+        viewable under the project. Clicking on a project will take you to the projects page, displaying a more in depth
+        description/information as well as more screenshots
+    </div>
+    <div class="projectPreviewsContainer">
+            {{range $v := .Projects}}
+                <div class="projectPreviewContainer">
+                    <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">
+                    <div class="projectPreviewContainerWrapper">
+
+                            <div class="projectTitle">{{$v.Title}}</div>
+                            <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
+
+
+                        <span>
+                            Technologies:
+                            {{range $i, $t := $v.Technologies}}
+                                {{if ne $i 0}}
+                                    ,
+                                {{end}}
+                                {{$t}}
+                            {{end}}
+                        </span>
+                        <div class="shortSummary">
+                            {{$v.Summary}}
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            {{end}}
+        </div>
+
 {{end}}
