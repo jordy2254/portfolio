@@ -9,9 +9,12 @@
                 <h2>Project Outcomes</h2>
                 {{.Project.ProjectOutcomes}}
 
-                <h2>Project Images</h2>
-                {{range $v := .Project.Images}}
-                        <img src="{{$.Context}}projects/images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
+                {{if .Project.Images}}
+                        <h2>Project Images</h2>
+                        {{range $v := .Project.Images}}
+                                <img src="{{$.Context}}projects/images/{{$.Project.FolderPathLowerCase}}/{{$v}}"/>
+                        {{end}}
                 {{end}}
+
         </div>
 {{end}}

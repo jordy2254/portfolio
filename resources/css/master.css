@@ -5,6 +5,9 @@
   --nav-accent-dark:#03070B;
   --content-bg-color:#DDEAF5;
 }
+*{
+  font-family: 'Roboto', sans-serif;
+}
 html{
   margin:0;
   width:100%;
