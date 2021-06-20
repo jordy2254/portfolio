@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"flag"
+	"github.com/jordy2254/portfolio/pkg/model"
 	"github.com/op/go-logging"
 	"html/template"
 	"io"
@@ -16,49 +17,28 @@ const (
 	PROJECT_FOLDER       = "projects"
 	TECHFILENAME         = "technologies.csv"
 	SUMMARYFILENAME      = "summary.txt"
+	SHORTSUMMARYFILENAME = "shortsummary.txt"
 	LEARNINGOUTCOMES     = "learningoutcomes.txt"
 	PROJECTOUTCOMES      = "projectoutcomes.txt"
 	IMAGEFOLDERNAME      = "images"
-	OUTPUTDIR            = "build"
 	RESOURCES            = "resources"
 	STATICPAGES          = "staticpages"
 )
 
 var(
 	context = "/"
+	outputPath = "build"
+
 	logger  = logging.MustGetLogger("example")
 	format = logging.MustStringFormatter(
 		`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{color:reset} %{message}`,
 	)
 )
 
-type project struct {
-	FolderPath          string
-	FolderPathLowerCase string
-	Title               string
-	Technologies        []string
-	Summary             template.HTML
-	ShortSummary             template.HTML
-	LearningOutcomes    template.HTML
-	ProjectOutcomes     template.HTML
-	Images              []string
-	HighlightedProject  bool
-	PlaceholderImage string
-}
-
-type projectDetailsPage struct {
-	Project project
-	Context string
-}
-
-type pageData struct {
-	Projects []project
-	Context string
-}
-
 func createTemplateForPage(page string) (*template.Template, error){
 	return template.ParseFiles(page, "templates/masterTemplate.gohtml", "templates/nav.gohtml")
 }
+
 func main() {
 	logging.SetBackend(logging.NewBackendFormatter(logging.NewLogBackend(os.Stdout, "", 0),format))
 
@@ -82,31 +62,34 @@ func buildSite(){
 		os.Exit(1)
 	}
 
-	var projects = loadProjects(projectDirs)
+	projects := loadProjects(projectDirs)
 
-	if _, err := os.Stat(OUTPUTDIR); !os.IsNotExist(err) {
-		error := os.RemoveAll(OUTPUTDIR)
+	if _, err := os.Stat(outputPath); !os.IsNotExist(err) {
+		error := os.RemoveAll(outputPath)
 		if error != nil {
 			logger.Error("Failed to delete prior build, build failed")
 			os.Exit(1)
 		}
 	}
 
-	os.Mkdir(OUTPUTDIR, os.ModePerm)
-	os.Mkdir(OUTPUTDIR+"/"+PROJECT_FOLDER, os.ModePerm)
-	os.Mkdir(OUTPUTDIR+"/"+PROJECT_FOLDER+"/images", os.ModePerm)
-	os.Mkdir(OUTPUTDIR+"/"+RESOURCES, os.ModePerm)
+	os.Mkdir(outputPath, os.ModePerm)
+	os.Mkdir(outputPath+"/"+PROJECT_FOLDER, os.ModePerm)
+	os.Mkdir(outputPath+"/"+PROJECT_FOLDER+"/images", os.ModePerm)
+	os.Mkdir(outputPath+"/"+RESOURCES, os.ModePerm)
 
 	logger.Debug("Copying resources")
-	copyDirectoryRecursive(RESOURCES, OUTPUTDIR+"/"+RESOURCES)
+	copyDirectoryRecursive(RESOURCES, outputPath+"/"+RESOURCES)
 	logger.Debug("Copying static pages")
-	copyDirectoryRecursive(STATICPAGES, OUTPUTDIR)
+	copyDirectoryRecursive(STATICPAGES, outputPath)
 
+	logger.Debug("Creating project pages")
 	generateProjectPages(projects)
+
+	logger.Debug("Creating single pages")
 	generateSinglePages(projects)
 }
 
-func generateSinglePages(projects []project) {
+func generateSinglePages(projects []model.Project) {
 	singlePages, err := ioutil.ReadDir("templates/singlePages")
 	if(err != nil){
 		logger.Warning("Single pages directory not found")
@@ -125,8 +108,8 @@ func generateSinglePages(projects []project) {
 		if(err != nil){
 			logger.Warningf("Failed to parse template %s, page will not be generated", templateName)
 		}
-		fileOuput, _ := os.Create(OUTPUTDIR + "/" + outputName)
-		error := templ.ExecuteTemplate(fileOuput, "base", pageData{
+		fileOuput, _ := os.Create(outputPath + "/" + outputName)
+		error := templ.ExecuteTemplate(fileOuput, "base", model.PageData{
 			Projects: projects,
 			Context:  context,
 		})
@@ -137,7 +120,7 @@ func generateSinglePages(projects []project) {
 	}
 }
 
-func generateProjectPages(projects []project) {
+func generateProjectPages(projects []model.Project) {
 	templ, err := createTemplateForPage("templates/ProjectViewTemplate.gohtml")
 	if(err != nil){
 		logger.Warning("Failed to parse template for projects, project pages will not be generated")
@@ -147,14 +130,14 @@ func generateProjectPages(projects []project) {
 	}
 }
 
-func generateProject(project project, templ *template.Template){
-	fileOuput, err := os.Create(OUTPUTDIR + "/" + PROJECT_FOLDER + "/" + project.FolderPathLowerCase + ".html")
+func generateProject(project model.Project, templ *template.Template){
+	fileOuput, err := os.Create(outputPath + "/" + PROJECT_FOLDER + "/" + project.FolderPathLowerCase + ".html")
 	if err != nil {
 		logger.Warningf("Failed to create output file for project %s", project.FolderPath)
 
 	}
 
-	imagePath := OUTPUTDIR + "/" + PROJECT_FOLDER + "/images/" + project.FolderPathLowerCase
+	imagePath := outputPath + "/" + PROJECT_FOLDER + "/images/" + project.FolderPathLowerCase
 
 	os.Mkdir(imagePath, os.ModePerm)
 	//copy image resources
@@ -162,8 +145,7 @@ func generateProject(project project, templ *template.Template){
 		copyFile(PROJECT_FOLDER+"/"+project.FolderPath+"/images/"+image, imagePath+"/"+image)
 	}
 
-
-	error := templ.ExecuteTemplate(fileOuput, "base", projectDetailsPage{
+	error := templ.ExecuteTemplate(fileOuput, "base", model.ProjectDetailsPage{
 		Project: project,
 		Context: context,
 	})
@@ -209,9 +191,9 @@ func copyFile(src, dst string) {
 	logger.Debugf("Copied file from %s to %s", src, dst)
 }
 
-func loadProjects(projectDirs []os.FileInfo) []project {
+func loadProjects(projectDirs []os.FileInfo) []model.Project {
 	logger.Info("Loading projects")
-	var projects []project
+	var projects []model.Project
 
 	for _, f := range projectDirs {
 		if !f.IsDir() {
@@ -224,13 +206,14 @@ func loadProjects(projectDirs []os.FileInfo) []project {
 	return projects
 }
 
-func loadProject(f os.FileInfo) project {
-	project := project{
+func loadProject(f os.FileInfo) model.Project {
+	project := model.Project{
 		FolderPath:          f.Name(),
 		FolderPathLowerCase: strings.ToLower(f.Name()),
 		Title:               strings.Replace(f.Name(), "_", " ", -1),
 		Technologies:        loadProjectTechFile(f),
 		Summary:             loadProjectSummaryFile(f),
+		ShortSummary:        loadProjectShortSummaryFile(f),
 		LearningOutcomes:    loadLearningOutcomesFile(f),
 		ProjectOutcomes:     loadProjectOutcomesFile(f),
 		Images:              loadProjectImagePaths(f),
@@ -275,6 +258,10 @@ func loadProjectSummaryFile(f os.FileInfo) template.HTML {
 	return template.HTML(loadTextFile(path))
 }
 
+func loadProjectShortSummaryFile(f os.FileInfo) string {
+	path := PROJECT_FOLDER + "/" + f.Name() + "/" + SHORTSUMMARYFILENAME
+	return loadTextFile(path)
+}
 
 func loadTextFile(src string) string {
 	file, err := os.Open(src)
