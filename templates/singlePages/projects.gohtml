@@ -14,8 +14,10 @@
                             <div class="projectTitle">{{$v.Title}}</div>
                             <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
 
-
-                        <span>
+                        <div class="shortSummary">
+                            {{$v.ShortSummary}}
+                        </div>
+                        <span class="tech">
                             Technologies:
                             {{range $i, $t := $v.Technologies}}
                                 {{if ne $i 0}}
@@ -24,9 +26,6 @@
                                 {{$t}}
                             {{end}}
                         </span>
-                        <div class="shortSummary">
-                            {{$v.ShortSummary}}
-                        </div>
                     </div>
                     </a>
                 </div>

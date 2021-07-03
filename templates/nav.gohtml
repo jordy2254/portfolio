@@ -1,20 +1,25 @@
 {{define "nav"}}
 <nav>
-    <div id="profileContainer">
-        <img src="{{$.Context}}resources/img/placeholder-profile-sq.jpg" id="profile"/>
-    </div>
-    <div>
-        <div id="menuToggle" style="display:none;"><a href="javascript:toggleMenu()">T</a></div>
-        <span id="name">Jordan Hellier</span>
-        <span id="jobTitle">Backend Software Developer</span>
+    <div class="profileMainContainer">
+        <div id="profileContainer">
+            <img src="{{$.Context}}resources/img/placeholder-profile-sq.jpg" id="profile"/>
+        </div>
+        <div>
+            <div id="menuToggle" style="display:none;"><a href="javascript:toggleMenu()">T</a></div>
+            <span id="name">Jordan Hellier</span>
+            <span id="jobTitle">Backend Software Developer</span>
+        </div>
+        <a onclick="javascript:toggleMenu()" class="menuToggle"><i class="fas fa-bars" ></i></a>
     </div>
     <div id="navLinksDiv">
         <ul id="navLinks">
-            <li><a href="{{$.Context}}index.html">Home</a></li>
-            <li><a href="{{$.Context}}projects.html">Projects</a></li>
-            <li><a href="{{$.Context}}contact.html">Contact</a></li>
-            <li><a href="{{$.Context}}resources/downloads/CV.pdf">Resume</a></li>
-            <li><a href="https://github.com/jordy2254">Github</a></li>
+            <li><a href="{{$.Context}}index.html">HOME</a></li>
+            <li><a href="{{$.Context}}projects.html">PROJECTS</a></li>
+            <li><a href="{{$.Context}}contact.html">CONTACT</a></li>
+            <li><a href="{{$.Context}}resources/downloads/CV.pdf">RESUME</a></li>
+            <li><a href="{{$.Context}}workflowandtools.html">WORKFLOW/TOOLS</a></li>
+            <li><a href="https://github.com/jordy2254">GITHUB</a></li>
+            <li><a href="https://uk.linkedin.com/in/jordan-hellier-468370215">LINKED IN</a></li>
         </ul>
     </div>
     <div class="navFooter">

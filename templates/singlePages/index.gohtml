@@ -26,6 +26,7 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
+                        <i class="devicon-java-plain colored languageIcon"></i>
                         <h2>Java</h2>
                         <div>
                             Java is the language I have the most expierence in. Below is a list of some
@@ -45,11 +46,13 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
+                        <i class="devicon-go-plain colored languageIcon"></i>
                         <h2>GoLang</h2>
                         <div>I've built a couple of projects using golang now, which can be seen on my projects page.
-                            I started using this language within the first quater of 2020, and quickly adjusted to
+                            I started using this language within the first quarter of 2020, and quickly adjusted to
                             writing code within golang, and enjoyed the change from writing object oriented based code.
-                            It has quickly become by default language for writing/mocking applications
+                            It has quickly become by default language for writing/mocking applications. And I have grown
+                            a love for the functional programming paradigm from this.
                         </div>
                     </div>
                 </div>
@@ -57,6 +60,8 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
+                        <i class="devicon-typescript-plain colored languageIcon"></i>
+                        <i class="devicon-javascript-plain colored languageIcon"></i>
                         <h2>Java script/Type script</h2>
                         <div>
                             <p></p>
@@ -72,8 +77,10 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
+                        <i class="devicon-html5-plain colored languageIcon"></i>
+                        <i class="devicon-css3-plain colored languageIcon"></i>
                         <h2>HTML/CSS</h2>
-                        <div>HTML and CSS are the core of todays web development. My design skills lack but given a
+                        <div>HTML and CSS are the core of today's web development. My design skills lack but given a
                             design I can implement the design and have a functioning website.
                         </div>
                     </div>
@@ -82,12 +89,12 @@
             <div class="language">
                 <div class="languageContainer">
                     <div>
+                        <i class="devicon-c-plain colored languageIcon"></i>
+                        <i class="devicon-cplusplus-plain colored languageIcon"></i>
                         <h2>C/C++</h2>
                         <div>These languages I have a functioning knowledge in, and is something I can work
-                            with.
-                            some of my projects have been developed with this however I have no substantial
-                            projects
-                            or industry expierence in this.
+                            with. Some of my projects have been developed with this however I have no substantial
+                            projects or industry experience in this, and fluency/proficiency is lacking.
                         </div>
                     </div>
                 </div>
@@ -97,25 +104,35 @@
     <div class="learning">
         <h1>What I'm learning to do</h1>
         <div>
-            I feel it's important to always be learning and expanding my skill set as such I am always creating something,
-            alot of the time this something is made as a throw away project to test an idea or learn a new skill.
-            In addition to this I'm also always reading articles and blogs about new coding languages/frameworks and more
-            I feel this is incredibly important to stay relevent in an ever expanding industry.<br/>
-            My current focuss is the learning of front end frameworks, although I'm not a UI designer I currently have
-            the skills to implement a UI from a design and feel a full-stack developer is a better overall developer than
-            someone unable to do full stack. Below is a list of some of the frameworks/languages I'm still working on
-            mastering to add to my toolbox, at their current stage I could code/use them but would not be effcient in doing so,
-            but doing is the best way and would be open to jobs using these technologies
+            I feel it's important to always be learning and expanding my skill set as such I am always creating or learning
+            about a new technology, language or framework. Even when I don't have an active project or task I am reading
+            various blogs and articles about the newest and greatest coding pattern, technology, framework etc.
+            I feel this is incredibly important to stay relevant in an ever expanding industry.<br/>
 
             <div class="languages">
                 <div class="language">
                     <div class="languageContainer">
                         <div>
+                            <i class="devicon-react-original colored languageIcon"></i>
                             <h2>React</h2>
                             <div>
                                 I've used react for one project so far but there's still alot for me to learn, I'm slowly working through
                                 various aspects of this library, such as react-query, redux and more in order to greatly improve my understanding
                                 and make application code better
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="language">
+                    <div class="languageContainer">
+                        <div>
+                            <h2>Microservices/cloud architecture</h2>
+                            <div>
+                                The current direction of development is leaning towards cloud based applications. One of
+                                my next goals is to better understand the architecture and what goes into building a large
+                                scale application for the cloud. Currently this lies at a level of understanding where I know
+                                the technologies but need to find a case to implement something to demonstrate this knowledge
+                                and solidify it.
                             </div>
                         </div>
                     </div>
@@ -137,7 +154,7 @@
                     <div class="projectPreviewContainer">
                         <div class="projectPreviewContainerWrapper">
                             <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">
-                                <div class="projectTitle">{{$v.FolderPath}}</div>
+                                <div class="projectTitle">{{$v.Title}}</div>
                                 <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
 
                             </a>
