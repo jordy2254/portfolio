@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	_ "io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -219,7 +220,19 @@ func loadProject(f os.FileInfo) model.Project {
 		Images:              loadProjectImagePaths(f),
 		HighlightedProject:  isHighlightedProject(f),
 	}
-	project.PlaceholderImage = context + "resources/img/placeholder-profile-sq.jpg"
+	placeHolderPath := ""
+
+	for _, image := range project.Images {
+		matched, _ := regexp.Match("preview\\.[A-Za-z0-9]", []byte(image))
+		if matched {
+			placeHolderPath = "projects/images/" + project.FolderPathLowerCase + "/" + image
+		}
+	}
+
+	if placeHolderPath == "" {
+		placeHolderPath = "resources/img/placeholder-profile-sq.jpg"
+	}
+	project.PlaceholderImage = context + placeHolderPath
 	return project
 }
 
