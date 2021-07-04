@@ -6,30 +6,9 @@
         description/information as well as more screenshots
     </div>
     <div class="projectPreviewsContainer">
-            {{range $v := .Projects}}
-                <div class="projectPreviewContainer">
-                    <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">
-                    <div class="projectPreviewContainerWrapper">
-
-                            <div class="projectTitle">{{$v.Title}}</div>
-                            <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
-
-                        <div class="shortSummary">
-                            {{$v.ShortSummary}}
-                        </div>
-                        <span class="tech">
-                            Technologies:
-                            {{range $i, $t := $v.Technologies}}
-                                {{if ne $i 0}}
-                                    ,
-                                {{end}}
-                                {{$t}}
-                            {{end}}
-                        </span>
-                    </div>
-                    </a>
-                </div>
-            {{end}}
-        </div>
+        {{range $v := .Projects}}
+            {{template "projectPreview" $v}}
+        {{end}}
+    </div>
 
 {{end}}

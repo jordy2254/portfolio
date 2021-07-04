@@ -147,29 +147,14 @@
             listing the technologies used and a quick summary, if one peaks your interesting clicking it will provide more information
         </div>
         {{$highlight := false}}
-        {{range $v := .Projects}}
-            {{if $x := $v.HighlightedProject}}
-                {{$highlight = true}}
-
-                    <div class="projectPreviewContainer">
-                        <div class="projectPreviewContainerWrapper">
-                            <a href="{{$.Context}}projects/{{$v.FolderPathLowerCase}}.html">
-                                <div class="projectTitle">{{$v.Title}}</div>
-                                <img src="{{$v.PlaceholderImage}}"class="previewImage" alt="preview image"/>
-
-                            </a>
-                            <span>
-                            {{range $i, $t := $v.Technologies}}
-                                {{if ne $i 0}}
-                                    ,
-                                {{end}}
-                                {{$t}}
-                            {{end}}
-                        </span>
-                        </div>
-                    </div>
+        <div class="projectPreviewsContainer">
+            {{range $v := .Projects}}
+                {{if $x := $v.HighlightedProject}}
+                    {{$highlight = true}}
+                    {{template "projectPreview" $v}}
+                {{end}}
             {{end}}
-        {{end}}
+        </div>
         {{if not $highlight}}
             <p>There doesn't appear to be any highlighted projects yet</p>
         {{end}}

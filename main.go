@@ -26,22 +26,22 @@ const (
 	STATICPAGES          = "staticpages"
 )
 
-var(
-	context = "/"
+var (
+	context    = "/"
 	outputPath = "build"
 
-	logger  = logging.MustGetLogger("example")
+	logger = logging.MustGetLogger("example")
 	format = logging.MustStringFormatter(
 		`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{color:reset} %{message}`,
 	)
 )
 
-func createTemplateForPage(page string) (*template.Template, error){
-	return template.ParseFiles(page, "templates/masterTemplate.gohtml", "templates/nav.gohtml")
+func createTemplateForPage(page string) (*template.Template, error) {
+	return template.ParseFiles(page, "templates/masterTemplate.gohtml", "templates/nav.gohtml", "templates/projectPreview.gohtml")
 }
 
 func main() {
-	logging.SetBackend(logging.NewBackendFormatter(logging.NewLogBackend(os.Stdout, "", 0),format))
+	logging.SetBackend(logging.NewBackendFormatter(logging.NewLogBackend(os.Stdout, "", 0), format))
 
 	bs := flag.Bool("build-site", false, "Builds the entire site given the params")
 	flag.StringVar(&context, "context", context, "Sets the context for the website route when building")
@@ -54,7 +54,7 @@ func main() {
 	}
 }
 
-func buildSite(){
+func buildSite() {
 
 	projectDirs, err := ioutil.ReadDir(PROJECT_FOLDER)
 
@@ -92,7 +92,7 @@ func buildSite(){
 
 func generateSinglePages(projects []model.Project) {
 	singlePages, err := ioutil.ReadDir("templates/singlePages")
-	if(err != nil){
+	if err != nil {
 		logger.Warning("Single pages directory not found")
 		return
 	}
@@ -106,7 +106,7 @@ func generateSinglePages(projects []model.Project) {
 		outputName := strings.Replace(v.Name(), "gohtml", "html", -1)
 
 		templ, err := createTemplateForPage("templates/singlePages/" + templateName)
-		if(err != nil){
+		if err != nil {
 			logger.Warningf("Failed to parse template %s, page will not be generated", templateName)
 		}
 		fileOuput, _ := os.Create(outputPath + "/" + outputName)
@@ -115,7 +115,7 @@ func generateSinglePages(projects []model.Project) {
 			Context:  context,
 		})
 		if error != nil {
-			logger.Warningf("Failed to execute template %s, page will not be generated", templateName)
+			logger.Warningf("Failed to execute template %s, page will not be generated, &s", templateName, error)
 		}
 		fileOuput.Close()
 	}
@@ -123,7 +123,7 @@ func generateSinglePages(projects []model.Project) {
 
 func generateProjectPages(projects []model.Project) {
 	templ, err := createTemplateForPage("templates/ProjectViewTemplate.gohtml")
-	if(err != nil){
+	if err != nil {
 		logger.Warning("Failed to parse template for projects, project pages will not be generated")
 	}
 	for _, v := range projects {
@@ -131,7 +131,7 @@ func generateProjectPages(projects []model.Project) {
 	}
 }
 
-func generateProject(project model.Project, templ *template.Template){
+func generateProject(project model.Project, templ *template.Template) {
 	fileOuput, err := os.Create(outputPath + "/" + PROJECT_FOLDER + "/" + project.FolderPathLowerCase + ".html")
 	if err != nil {
 		logger.Warningf("Failed to create output file for project %s", project.FolderPath)

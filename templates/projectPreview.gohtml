@@ -1,0 +1,24 @@
+{{define "projectPreview"}}
+        <div class="projectPreviewContainer">
+            <a href="projects/{{.FolderPathLowerCase}}.html">
+                <div class="projectPreviewContainerWrapper">
+
+                    <div class="projectTitle">{{.Title}}</div>
+                    <img src="{{.PlaceholderImage}}"class="previewImage" alt="preview image"/>
+
+                    <div class="shortSummary">
+                        {{.ShortSummary}}
+                    </div>
+                    <span class="tech">
+                                Technologies:
+                                {{range $i, $t := .Technologies}}
+                                    {{if ne $i 0}}
+                                        ,
+                                    {{end}}
+                                    {{$t}}
+                                {{end}}
+                            </span>
+                </div>
+            </a>
+        </div>
+{{end}}
