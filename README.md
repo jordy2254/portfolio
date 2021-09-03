@@ -1,3 +1,8 @@
+# Copyright
+This file and the containing repository are covered by copy right, and are public for reference only.
+
+&copy; 2020 Jordan Hellier All rights reserved
+
 # Portfolio Site generator
 This application is a static site generator for my portfolio page. Projects are created with a specific 
 structure of files/folders which are then interpreted and built into project pages. The reason for doing
