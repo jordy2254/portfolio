@@ -1,0 +1,33 @@
+@media only screen and (max-width: 768px) {
+  :root{
+    /*https://coolors.co/1e72c0*/
+    --main-bg-color:gray;
+    }
+
+  #topButton{
+    position: fixed;
+  }
+
+  #content{
+    margin:0;
+    height:100vh;
+    width:100vw;
+  }
+  .featuredProject{
+    flex: 0 0 100%;
+  }
+  .language {
+    display:flex;
+
+    flex: 0 0 100%;
+    height:100%;
+    vertical-align:top;
+  }
+
+  .projectPreviewsContainer, .projectPreviewContainer{
+    display:flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    min-width: 100%;
+  }
+}

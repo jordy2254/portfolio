@@ -1,0 +1,80 @@
+@media only screen and (max-width: 600px) {
+  :root{
+    /*https://coolors.co/1e72c0*/
+    --main-bg-color: #724848;
+    }
+    #content{
+      margin:0;
+      height:100vh;
+      width:100%;
+      display: grid;
+      grid-template-columns: 100%;
+      grid-template-rows: auto auto;
+    }
+    .profileMainContainer{
+      margin-bottom:10px;
+      position: relative;
+    }
+    .menuToggle{
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display:block;
+      font-size: 150%;
+      color:white;
+      padding:10px;
+    }
+    .featuredProject{
+      flex: 0 0 100%;
+    }
+    .language {
+      display:flex;
+
+      flex: 0 0 100%;
+      height:100%;
+      vertical-align:top;
+    }
+
+    body{
+      overflow:visible;
+    }
+
+    #mainContent {
+      grid-column-start: 1;
+      grid-column-end: span 1;
+      grid-row-start: 2;
+      grid-row-end: span 1;
+      overflow-y: visible;
+      background-color: var(--content-bg-color);
+    }
+
+    nav {
+      grid-column-start: 1;
+      grid-column-end: span 1;
+      grid-row-start: 1;
+      grid-row-end: span 1;
+      background-color: var(--nav-bg-color);
+    }
+
+    #navLinksDiv{
+      margin-top:0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
+    }
+
+    #navLinksDiv.expanded {
+      max-height: 200px;
+      /*This shouldn't happen but i'd rather it look worse than be broken...*/
+      overflow: scroll;
+    }
+
+  footer#footerDesktop {
+    display: none;
+  }
+
+  footer#footerMobile{
+    display: block;
+  }
+
+}
